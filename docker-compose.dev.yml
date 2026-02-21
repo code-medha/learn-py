@@ -1,0 +1,34 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - .venv/
+
+        - action: rebuild
+          path: ./.uv.lock
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=cruddur
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5436:5432'
+    volumes: 
+      - post:/var/lib/postgresql/data
+   
+volumes:
+  post:
+    driver: local
