@@ -1,5 +1,10 @@
-from fastapi import FastAPI, Response, status
+from fastapi import Depends, FastAPI, Response, status
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from . import models
+from .database import engine, get_db
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -9,12 +14,13 @@ class Post(BaseModel):
     published: bool
 
 
-def find_post(id):
-    pass
-
 @app.get("/")
 def read_root():
     return {"Hello": "sql sql sql"}
+
+@app.get("/sql")    
+def test_posts(db: Session = Depends(get_db)):
+    return {"status": "success"}
 
 @app.get("/posts")
 def get_posts():

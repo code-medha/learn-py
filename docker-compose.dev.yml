@@ -21,7 +21,7 @@ services:
     image: postgres:13-alpine
     restart: always
     environment:
-      - POSTGRES_DB=cruddur
+      - POSTGRES_DB=virtual
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
