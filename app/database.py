@@ -15,6 +15,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # models extend the base class
 Base = declarative_base()
+
 def get_db():
     db = SessionLocal()
     try:

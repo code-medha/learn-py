@@ -9,9 +9,10 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 class Post(BaseModel):
-    title: str
-    content: str
-    published: bool
+    name: str
+    ram: int
+    storage: int
+    published: bool = True
 
 
 @app.get("/")
@@ -20,16 +21,25 @@ def read_root():
 
 @app.get("/sql")    
 def test_posts(db: Session = Depends(get_db)):
-    return {"status": "success"}
 
-@app.get("/posts")
-def get_posts():
-    return {"data": "this is your posts"}
+    virtual_mach = db.query(models.Vm).all()
+    return {"data": virtual_mach}
 
-@app.post("/posts")
-def create_posts(post: Post):
-    print(post)
-    return {"message": "post created"}
+@app.get("/vms")
+def get_posts(db: Session = Depends(get_db)):
+
+    virtual_mach = db.query(models.Vm).all()
+    return {"data": virtual_mach}
+
+@app.post("/vms", status_code=status.HTTP_201_CREATED)
+def create_posts(post: Post, db: Session = Depends(get_db)):
+    new_post = models.Vm(**post.model_dump())
+    db.add(new_post)
+    db.commit()
+    db.refresh(new_post)
+
+    return {"data": new_post}
+
 
 
 # {id} is called a path parameter
