@@ -26,7 +26,8 @@ app = FastAPI()
 @app.get(
     "/vms",
     summary="List VMs",
-    description="List of virtual machines available on your cluster")
+    description="List of virtual machines available on your cluster",
+)
 def list_vms(
     db: Session = Depends(get_db),
     page: int = Query(default=0, ge=0, description="Page number (0-indexed)"),
